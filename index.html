@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Lưu localStorage</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: inline-block; width: 120px; }
+        input[type="text"], input[type="color"] { width: 300px; padding: 5px; }
+        .service-group { margin-left: 120px; margin-bottom: 10px; }
+        button { padding: 10px 20px; margin-right: 10px; cursor: pointer; }
+        #output { margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Cấu hình Website</h1>
+    <form id="configForm">
+        <div class="form-group">
+            <label>Tên web:</label>
+            <input type="text" id="tenWeb" required>
+        </div>
+        <div class="form-group">
+            <label>Màu chủ đạo:</label>
+            <input type="color" id="mauChuDao" value="#0077ff">
+        </div>
+        <div class="form-group">
+            <label>Slogan:</label>
+            <input type="text" id="slogan" required>
+        </div>
+        <div class="form-group">
+            <label>3 dịch vụ:</label>
+            <div class="service-group">
+                <input type="text" class="dichVu" placeholder="Dịch vụ 1" required>
+            </div>
+            <div class="service-group">
+                <input type="text" class="dichVu" placeholder="Dịch vụ 2" required>
+            </div>
+            <div class="service-group">
+                <input type="text" class="dichVu" placeholder="Dịch vụ 3" required>
+            </div>
+        </div>
+        <button type="submit">Save</button>
+        <button type="button" id="loadBtn">Load</button>
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+        // Lưu vào localStorage
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                tenWeb: document.getElementById('tenWeb').value,
+                mauChuDao: document.getElementById('mauChuDao').value,
+                slogan: document.getElementById('slogan').value,
+                dichVu: Array.from(document.querySelectorAll('.dichVu')).map(input => input.value)
+            };
+            
+            localStorage.setItem('webConfig', JSON.stringify(data));
+            alert('Đã lưu xong!');
+        });
+
+        // Load từ localStorage
+        document.getElementById('loadBtn').addEventListener('click', function() {
+            const saved = localStorage.getItem('webConfig');
+            const output = document.getElementById('output');
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                output.textContent = JSON.stringify(data, null, 2);
+            } else {
+                output.textContent = 'Chưa có dữ liệu được lưu.';
+            }
+        });
+    </script>
+</body>
+</html>
